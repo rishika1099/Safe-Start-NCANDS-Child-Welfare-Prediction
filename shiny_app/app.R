@@ -1,9 +1,10 @@
 # ============================================================
-# Module 9: Production R Shiny Dashboard
-# ACS Predictive Analytics Curriculum
+# Child Welfare Analytics — Shiny Dashboard (Simulated Data)
 # ============================================================
-# Run: shiny::runApp('Module_09_Shiny_Production.R')
-# Deploy: rsconnect::deployApp() to shinyapps.io
+# Personal learning project. Uses synthetic intake records from
+# ../data/. Not affiliated with ACS or any agency.
+#
+# Run from the repo root:  shiny::runApp("shiny_app")
 # ============================================================
 
 library(shiny)
@@ -17,7 +18,11 @@ library(DT)
 library(plotly)
 
 # ─── LOAD DATA AND MODEL ──────────────────────────────────────
-scr      <- read_csv('data/acs_scr_reports.csv', show_col_types=FALSE) %>%
+# shiny::runApp("shiny_app") sets wd to shiny_app/, so ../data is the repo's data dir.
+# If launched from inside shiny_app/, fall back to ./data.
+DATA_DIR <- if (dir.exists("../data")) "../data" else "data"
+
+scr      <- read_csv(file.path(DATA_DIR, 'acs_scr_reports.csv'), show_col_types=FALSE) %>%
   mutate(
     report_date      = as.Date(report_date),
     is_substantiated = outcome == 'Substantiated',
@@ -29,7 +34,7 @@ scr      <- read_csv('data/acs_scr_reports.csv', show_col_types=FALSE) %>%
     )
   )
 
-features <- read_csv('data/acs_features.csv', show_col_types=FALSE)
+features <- read_csv(file.path(DATA_DIR, 'acs_features.csv'), show_col_types=FALSE)
 
 FEATURES <- c('prior_reports_12mo','prior_substantiated_flag',
                'dv_history_flag','child_age_under_5',
@@ -77,7 +82,7 @@ ui <- dashboardPage(
   skin = 'blue',
 
   dashboardHeader(
-    title = 'ACS Analytics Dashboard',
+    title = 'Child Welfare Analytics (Simulated)',
     titleWidth = 280
   ),
 
@@ -185,7 +190,7 @@ ui <- dashboardPage(
         fluidRow(
           box(DTOutput('fairness_table'), width=12,
               title='Fairness Metrics by Borough',
-              footer='High FPR in Bronx/Brooklyn = equity concern — report to ACS equity team',
+              footer='Demo only on synthetic data — large between-group FPR gaps would warrant an equity review on real data.',
               status='warning', solidHeader=TRUE)
         )
       )

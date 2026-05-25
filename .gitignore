@@ -1,1 +1,19 @@
+# OS / editor
 .DS_Store
+.Rhistory
+.Rproj.user/
+.Rapp.history
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Restricted child welfare research data — NEVER commit
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Local environment
+.env
+.venv/
+.Renviron

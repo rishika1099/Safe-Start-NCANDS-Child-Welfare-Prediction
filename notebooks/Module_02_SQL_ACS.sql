@@ -1,6 +1,6 @@
 -- ============================================================
 -- MODULE 2: SQL FOR ACS CHILD WELFARE DATA
--- ACS Predictive Analytics Curriculum
+-- Personal Learning Project — Simulated Child Welfare Data
 -- ============================================================
 -- Run these queries in: DuckDB, SQLite, PostgreSQL, or BigQuery
 -- To use in R: library(DBI); library(duckdb)
