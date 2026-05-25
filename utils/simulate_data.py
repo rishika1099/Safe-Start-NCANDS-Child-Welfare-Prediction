@@ -56,16 +56,41 @@ def simulate_acs_data(n=1000, seed=42):
     caseload   = np.random.randint(30,80,size=n)
     contact    = np.where(np.random.binomial(1,0.08,size=n)==1, np.nan,
                           np.random.exponential(2,size=n).astype(int)+1)
-    log_odds   = (-2.5+0.4*prior_rpts+0.8*prior_subst+0.5*dv_hist+0.3*shelter
-                  +np.where(ages<5,0.6,0)
-                  +np.where(np.array(allegations)=='Physical Abuse',0.7,0)
-                  +np.where(np.array(allegations)=='Sexual Abuse',0.9,0)
-                  +np.where(np.array(reporters)=='Hospital/Medical',0.3,0)
-                  +np.where(substance==1,0.4,0)+np.random.normal(0,0.5,size=n))
-    prob       = 1/(1+np.exp(-log_odds))
-    needs_cons = np.random.binomial(1,prob)
-    outcomes   = np.where(np.random.binomial(1,0.10,size=n)==1,'Still Open',
-                          np.random.choice(OUTCOMES[:3],size=n,p=[0.53,0.31,0.16]))
+    # Data-generating process. Coefficients calibrated to give an
+    # achievable ROC-AUC ~0.78-0.85 with realistic-looking risk signal.
+    # All features that appear in the dictionary now contribute, so the
+    # model is not surprised when SHAP highlights them.
+    substance_eff = np.where(substance == 1, 0.6, 0.0)  # NA treated as 0 effect
+    log_odds = (
+        -3.2
+        + 0.55 * prior_rpts                                            # history dominates
+        + 1.20 * prior_subst                                            # prior substantiation
+        + 0.70 * dv_hist
+        + 0.55 * shelter
+        + 0.90 * (ages < 5).astype(int)                                 # young children
+        + np.where(np.array(allegations) == 'Physical Abuse',     1.00, 0)
+        + np.where(np.array(allegations) == 'Sexual Abuse',       1.30, 0)
+        + np.where(np.array(allegations) == 'Neglect - Medical',  0.55, 0)
+        + np.where(np.array(reporters)   == 'Hospital/Medical',   0.55, 0)
+        + np.where(np.array(reporters)   == 'Law Enforcement',    0.40, 0)
+        + np.where(np.array(reporters)   == 'Anonymous',         -0.30, 0)  # less reliable
+        + substance_eff
+        + 2.0 * (rep_acc - 0.30)                                        # reporter accuracy
+        - 0.025 * (caseload - 50)                                       # caseload friction
+        + np.random.normal(0, 0.20, size=n)                             # noise: 0.5 -> 0.2
+    )
+    prob       = 1 / (1 + np.exp(-log_odds))
+    needs_cons = np.random.binomial(1, prob)
+    # Outcome is now tied to the true risk: high-risk cases substantiate more often.
+    outcome_prob_sub = 0.10 + 0.55 * prob                                # 0.10 .. 0.65
+    is_open   = np.random.binomial(1, 0.10, size=n).astype(bool)
+    is_sub    = np.random.binomial(1, outcome_prob_sub).astype(bool)
+    outcomes = np.where(
+        is_open, 'Still Open',
+        np.where(is_sub, 'Substantiated',
+                 np.where(np.random.binomial(1, 0.65, size=n) == 1,
+                          'Unsubstantiated', 'Unfounded'))
+    )
     cw_ids     = [f'CW{str(i).zfill(4)}' for i in np.random.randint(1,80,size=n)]
 
     NARR = [

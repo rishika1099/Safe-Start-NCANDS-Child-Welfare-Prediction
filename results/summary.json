@@ -4,18 +4,18 @@
     "n_families": 498,
     "date_min": "2021-01-01",
     "date_max": "2024-12-31",
-    "positive_rate": 0.25,
-    "substantiated_rate": 0.282
+    "positive_rate": 0.252,
+    "substantiated_rate": 0.208
   },
   "best_model": "logistic_l2",
-  "f2_max_threshold_unconstrained": 0.05,
-  "operational_threshold_top25pct": 0.5845701973084166,
-  "operational_precision": 0.368,
-  "operational_recall": 0.368,
-  "operational_flag_rate": 0.25,
-  "cv_pr_auc_mean": 0.381,
-  "cv_roc_auc_mean": 0.6162,
-  "n_features_after_encoding": 41,
+  "f2_max_threshold_unconstrained": 0.3,
+  "operational_threshold_top25pct": 0.6197605871406281,
+  "operational_precision": 0.5317460317460317,
+  "operational_recall": 0.5317460317460317,
+  "operational_flag_rate": 0.252,
+  "cv_pr_auc_mean": 0.5297,
+  "cv_roc_auc_mean": 0.7307,
+  "n_features_after_encoding": 49,
   "n_subgroups_borough": 5,
   "n_subgroups_race": 6
 }

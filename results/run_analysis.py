@@ -107,10 +107,35 @@ GROUP = "family_id"
 # Missing-indicator columns for features with informative missingness
 for col in ["days_since_last_report", "substance_use_flag", "days_to_first_contact"]:
     df[f"{col}_missing"] = df[col].isna().astype(int)
+
+# Module-5 style interactions: cross prior-involvement with severity, age
+# with severity, and report-source with allegation. These give linear models
+# access to the non-linear effects the DGP encodes.
+df["int_prior_x_physical"] = df["prior_substantiated_flag"] * (
+    df["allegation_type"] == "Physical Abuse").astype(int)
+df["int_prior_x_sexual"]   = df["prior_substantiated_flag"] * (
+    df["allegation_type"] == "Sexual Abuse").astype(int)
+df["int_age_x_physical"]   = df["child_age_under_5"] * (
+    df["allegation_type"] == "Physical Abuse").astype(int)
+df["int_age_x_sexual"]     = df["child_age_under_5"] * (
+    df["allegation_type"] == "Sexual Abuse").astype(int)
+df["int_hosp_x_age"]       = (df["reporter_type"] == "Hospital/Medical").astype(int) \
+                              * df["child_age_under_5"]
+df["int_law_x_dv"]         = (df["reporter_type"] == "Law Enforcement").astype(int) \
+                              * df["dv_history_flag"]
+# Engineered ratios / counts
+df["prior_density"] = df["prior_reports_12mo"] / (
+    1 + df["days_since_last_report"].fillna(365) / 30)
+df["risk_caseload"] = df["caseworker_caseload"] / (1 + df["reporter_accuracy_score"])
+
 NUMERIC_PLUS = NUMERIC + [
     "days_since_last_report_missing",
     "substance_use_flag_missing",
     "days_to_first_contact_missing",
+    "int_prior_x_physical", "int_prior_x_sexual",
+    "int_age_x_physical",   "int_age_x_sexual",
+    "int_hosp_x_age",       "int_law_x_dv",
+    "prior_density",        "risk_caseload",
 ]
 
 X = df[NUMERIC_PLUS + CATEGORICAL].copy()
