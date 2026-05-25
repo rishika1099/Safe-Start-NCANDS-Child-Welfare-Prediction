@@ -37,6 +37,17 @@ Both tracks are active parts of this repository. The simulated track is the work
 ├── shiny_app/                      # Production-style Shiny dashboard
 │   ├── app.R
 │   └── README.md
+├── ncands_project/                 # NCANDS code scaffold (runs on NDACAN data)
+│   ├── README.md
+│   ├── _config.R                   # Column dictionary + paths + constants
+│   ├── _utils.R                    # Group CV, suppression, guards
+│   ├── 01_load_ncands.R            # Read & normalize NCANDS Child File
+│   ├── 02_features.R               # Engineer modeling features
+│   ├── 03_model.R                  # tidymodels: logistic + xgboost
+│   ├── 04_fairness.R               # Subgroup metrics w/ cell suppression
+│   ├── 05_explain.R                # SHAP (aggregate only)
+│   ├── 06_causal_rdd.R             # Regression discontinuity template
+│   └── run_all.R                   # Orchestrator
 ├── docs/
 │   └── NDACAN_NCANDS_Project_Plan.md   # Research design for the real-data track
 └── utils/
@@ -109,11 +120,14 @@ install.packages(c(
 
 ## Part 2 — NCANDS/NDACAN Project Track
 
-This track documents the research design for extending the methodology in Part 1 to real child welfare data obtained through the **National Data Archive on Child Abuse and Neglect (NDACAN)** at Cornell. The full plan lives in [docs/NDACAN_NCANDS_Project_Plan.md](docs/NDACAN_NCANDS_Project_Plan.md). Highlights:
+This track has two parts: a research-design document (`docs/`) and a runnable code scaffold (`ncands_project/`) that mirrors the simulated pipeline and is ready to execute once real data lands in `data/raw/`. The scripts safely no-op when that directory is empty, which is the current state of the public repo.
 
-- **Primary dataset:** NCANDS Child File — the case-level federal dataset of child maltreatment reports and dispositions.
+The full plan lives in [docs/NDACAN_NCANDS_Project_Plan.md](docs/NDACAN_NCANDS_Project_Plan.md). Highlights:
+
+- **Primary dataset:** [NCANDS Child File](https://www.ndacan.acf.hhs.gov/datasets/datasets-list.cfm) — the case-level federal dataset of child maltreatment reports and dispositions (NDACAN, 2000–2024).
 - **Context dataset:** NCANDS Agency File — state-year administrative context.
-- **Possible extensions:** AFCARS (foster care), NYTD (transition-age youth outcomes), NSCAW (longitudinal well-being), NIS (national incidence study).
+- **Policy context:** [SCAN Policies Database](https://www.ndacan.acf.hhs.gov/datasets/datasets-list.cfm) — state-year statutory variation used as the identification source for the DiD design.
+- **Possible extensions:** AFCARS (Foster Care / Adoption / 6-month), NYTD (transition-age youth outcomes), NSCAW I/II (longitudinal well-being), NIS (incidence), LONGSCAN (longitudinal cohort).
 - **Research questions:** rereport / resubstantiation prediction, equity audits across reporter source and race/ethnicity, threshold-based causal effects of investigation disposition on rereferral, and state-level policy event studies.
 - **Modeling plan:** mirror Part 1 — group-aware CV at the child/family level, imbalanced-class handling, calibrated thresholds, fairness disaggregation, SHAP explanations, and pre-registered causal designs (RDD / DiD / IV where identifiable).
 - **Ethics and governance:** NDACAN Terms of Use compliance, minimum-cell suppression, no individual-level publication, IRB review where applicable, and a documented access workflow before any data is touched.

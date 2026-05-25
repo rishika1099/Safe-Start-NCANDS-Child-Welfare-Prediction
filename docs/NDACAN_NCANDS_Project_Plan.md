@@ -22,14 +22,19 @@ The **NCANDS Child File** is the case-level federal dataset of child maltreatmen
 
 ### 2.2 Context: NCANDS Agency File
 
-The **NCANDS Agency File** provides state-year administrative context (workforce, intake volume, screen-in rates). It will be used as a state-year covariate layer to support fairness comparisons and policy-event causal designs.
+The **NCANDS Agency File** provides state-year administrative context (workforce, intake volume, screen-in rates, dispositions). It will be joined to the Child File as a state-year covariate layer to support fairness comparisons and as the denominator/baseline for state-level rate calculations.
 
-### 2.3 Possible Extensions
+### 2.3 Policy Context: SCAN Policies Database
 
-- **AFCARS Foster Care File** — to study downstream foster-care entry following investigation.
+The **State Child Abuse and Neglect (SCAN) Policies Database** (most recent NDACAN release covering 2019–2023) encodes state-year statutory and regulatory variation in mandated reporting, screening thresholds, differential response, and related policies. This is the natural identifying variation for the difference-in-differences research question (§3.4) — it provides clean, dated policy changes joinable to NCANDS Agency / Child Files by state and year.
+
+### 2.4 Possible Extensions
+
+- **AFCARS — Foster Care, Adoption, and 6-month Files** — to study downstream foster-care entry and adoption following investigation disposition.
 - **NYTD (National Youth in Transition Database)** — transition-age youth outcomes.
-- **NSCAW (National Survey of Child and Adolescent Well-Being)** — longitudinal well-being measures; useful for outcome validity checks.
-- **NIS (National Incidence Study)** — population-level incidence comparisons; useful for understanding under-reporting bias in NCANDS.
+- **NSCAW I / II (General or Restricted Release)** — longitudinal well-being measures on a child-welfare-involved sample; useful for outcome-validity checks of administrative-data risk scores.
+- **NIS (NIS-1 through NIS-4)** — population-level incidence estimates; useful for quantifying under-reporting in NCANDS.
+- **LONGSCAN (ages 0–18)** — longitudinal maltreatment outcomes, useful as a validation cohort.
 
 Extensions will only be pursued if they meaningfully strengthen the research questions; each adds its own data-use obligations.
 
@@ -40,7 +45,7 @@ Extensions will only be pursued if they meaningfully strengthen the research que
 1. **Rereport / resubstantiation prediction.** Given a screened-in report, what is the probability of a subsequent rereport (or substantiated rereport) within 6 / 12 / 24 months? How does predictive performance compare across model families (regularized logistic regression, gradient-boosted trees) and across feature sets (intake-only vs. intake + prior-history)?
 2. **Equity audit.** Conditional on risk score, do false positive and false negative rates differ by reporter source, race/ethnicity, and child age band? Where do disparities concentrate?
 3. **Threshold-based causal effects.** Where state agencies use a screening or risk-assessment threshold, can a regression-discontinuity design estimate the local causal effect of investigation (vs. screen-out) on subsequent rereferral?
-4. **Policy event studies.** Using NCANDS Agency File state-year context, do mandated-reporter expansions or differential-response policy changes shift rereport rates? Difference-in-differences with appropriate parallel-trends diagnostics.
+4. **Policy event studies.** Using the SCAN Policies Database joined to NCANDS Agency / Child Files, do mandated-reporter expansions, differential-response adoptions, or screening-threshold changes shift rereport rates? Difference-in-differences with appropriate parallel-trends diagnostics; staggered-adoption estimators (`did`, `fixest`) where multiple states adopt at different times.
 
 Each research question has a pre-specified estimand, a pre-specified identification strategy, and a pre-specified sensitivity analysis. These will be documented in `docs/` before any modeling on real data.
 
