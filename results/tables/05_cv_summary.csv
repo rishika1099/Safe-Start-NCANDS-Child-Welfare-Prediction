@@ -1,0 +1,6 @@
+,fold,fold,roc_auc,roc_auc,pr_auc,pr_auc,brier,brier
+,mean,std,mean,std,mean,std,mean,std
+model,,,,,,,,
+gradient_boosting,2.0,1.5811,0.5911,0.0547,0.3296,0.0534,0.2003,0.016
+logistic_l2,2.0,1.5811,0.6162,0.0345,0.381,0.0192,0.2388,0.0124
+random_forest,2.0,1.5811,0.6119,0.0285,0.3446,0.0188,0.1963,0.006

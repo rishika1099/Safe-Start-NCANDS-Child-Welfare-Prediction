@@ -50,6 +50,12 @@ Both tracks are active parts of this repository. The simulated track is the work
 │   └── run_all.R                   # Orchestrator
 ├── docs/
 │   └── NDACAN_NCANDS_Project_Plan.md   # Research design for the real-data track
+├── results/                        # Pipeline outputs on simulated data
+│   ├── observations.md             # Narrative write-up of findings
+│   ├── run_analysis.py             # Reproducible pipeline (sklearn + SHAP)
+│   ├── summary.json
+│   ├── figures/                    # PNG charts
+│   └── tables/                     # CSV tables
 └── utils/
     └── simulate_data.py            # Regenerate the synthetic dataset
 ```
@@ -101,6 +107,10 @@ This is a personal learning project I use to practice the full child welfare ana
 - SHAP explanations at the case level and global level, plus simple counterfactuals.
 - Causal designs: regression discontinuity at a risk-score threshold, propensity score matching, difference-in-differences, instrumental variables.
 - Narrative text mining: tidytext pipelines, TF-IDF, LDA topic modeling, sentiment scoring.
+
+### Results
+
+A pre-computed run of the pipeline on the simulated data lives in [`results/`](results/observations.md) — descriptive stats, group-aware CV metrics for logistic / RF / GBM, threshold sweep (with both F2-max and operational top-K% cutoffs), fairness audit by borough and race/ethnicity, and global SHAP importance, with figures.
 
 ### How to Run
 

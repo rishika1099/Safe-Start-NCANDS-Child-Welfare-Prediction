@@ -1,0 +1,21 @@
+{
+  "descriptive": {
+    "n_reports": 1000,
+    "n_families": 498,
+    "date_min": "2021-01-01",
+    "date_max": "2024-12-31",
+    "positive_rate": 0.25,
+    "substantiated_rate": 0.282
+  },
+  "best_model": "logistic_l2",
+  "f2_max_threshold_unconstrained": 0.05,
+  "operational_threshold_top25pct": 0.5845701973084166,
+  "operational_precision": 0.368,
+  "operational_recall": 0.368,
+  "operational_flag_rate": 0.25,
+  "cv_pr_auc_mean": 0.381,
+  "cv_roc_auc_mean": 0.6162,
+  "n_features_after_encoding": 41,
+  "n_subgroups_borough": 5,
+  "n_subgroups_race": 6
+}
