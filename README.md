@@ -1,8 +1,6 @@
-# ACS Child Welfare Predictive Analytics — Learning Curriculum
+# Child Welfare Analytics: Predictive Modeling, Explainability, and Causal Inference
 
-A structured, hands-on curriculum for learning predictive analytics and causal inference using simulated NYC Administration for Children's Services (ACS) data.
-
-Built for: Columbia University MSDS students joining ACS's Office of Research & Analytics
+The repository demonstrates an end-to-end analytics workflow, from data preparation and feature engineering to model development, fairness evaluation, explainability, causal analysis, and dashboard deployment.
 
 ---
 
@@ -109,18 +107,6 @@ ACS assigns consultation based on a risk score threshold. Cases just above vs ju
 
 ---
 
-## Learning Order
-
-```
-Week 1-2:   Module 01 (R basics) + Module 02 (SQL)
-Week 3-4:   Module 03 (modeling) + Module 04 (imbalanced data)
-Week 5-6:   Module 05 (feature engineering) + Module 06 (SHAP)
-Week 7-8:   Module 07 (causal inference)        ← most time here
-Week 9-10:  Module 08 (NLP) + Module 09 (Shiny)
-```
-
----
-
 ## Quick Start
 
 ```R
@@ -159,6 +145,3 @@ All data is **synthetically generated** for learning purposes. No real patient o
 
 To regenerate data: `python utils/simulate_data.py`
 
----
-
-*Built for the Columbia University MSDS ACS Internship Curriculum*
