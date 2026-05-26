@@ -1,17 +1,20 @@
-# Safe-Start: Child Welfare Predictive Analytics (Simulated + NCANDS Project Tracks)
+# Safe-Start: Child Welfare Analytics (Real NYC ACS + Simulated + NCANDS Project Tracks)
 
-> **Disclaimer.** This is an independent educational and portfolio project. It is not affiliated with, endorsed by, or developed in partnership with ACS, Columbia University, NDACAN, or any government agency. The simulated-data notebooks use synthetically generated data for learning and prototyping. The NCANDS/NDACAN project track is a research-design and implementation plan and does not imply that restricted NDACAN data has been committed to this repository.
+> **Disclaimer.** This is an independent educational and portfolio project. It is not affiliated with, endorsed by, or developed in partnership with ACS, Columbia University, NDACAN, or any government agency. The simulated-data notebooks use synthetically generated data for learning and prototyping. The real-data track uses publicly published NYC ACS pipeline data (NYC Open Data, Local Law 132 of 2022). The NCANDS/NDACAN project track is a research-design and implementation plan and does not imply that restricted NDACAN data has been committed to this repository.
 
 ---
 
 ## Overview
 
-This repository contains two connected parts:
+This repository contains three connected parts:
 
-1. **Simulated Data Learning Track** — a set of R / SQL / Shiny notebooks that build an end-to-end child welfare analytics workflow (intake risk modeling, fairness evaluation, SHAP explainability, causal inference, NLP on case narratives, and a production-style Shiny dashboard) on **synthetic intake records**.
-2. **NCANDS/NDACAN Project Track** — a research-design and implementation plan that documents how the same methodology will be applied to real child welfare research data obtained through the **National Data Archive on Child Abuse and Neglect (NDACAN)**, including dataset selection, research questions, modeling approach, causal inference design, ethics review, and data governance.
+1. **Real NYC ACS Data Track** — analysis of real, publicly published NYC ACS child-welfare pipeline data ([NYC Open Data dataset `uhvm-6sct`](https://data.cityofnewyork.us/Social-Services/Report-to-City-Council-on-Demographics-of-Children/uhvm-6sct), Local Law 132 of 2022). Citywide funnel rates, race/ethnicity disproportionality, borough variation, and four-year trends. See [`results/real_data/observations.md`](results/real_data/observations.md).
+2. **Simulated Data Learning Track** — R / SQL / Shiny notebooks that build an end-to-end child-welfare analytics workflow (intake risk modeling, fairness evaluation, SHAP explainability, causal inference, NLP on case narratives, Shiny dashboard) on **synthetic intake records**. This is the case-level methodology prototype.
+3. **NCANDS/NDACAN Project Track** — research-design and implementation plan + code scaffold for extending the methodology to real child welfare research data obtained through NDACAN.
 
-Both tracks are active parts of this repository. The simulated track is the working prototype; the NCANDS track is the research design and roadmap for the real-data implementation.
+All three tracks are active parts of this repository. The real-data track is the working analysis on aggregate counts; the simulated track is the case-level methodology prototype; the NCANDS track is the research design for the restricted-data implementation.
+
+> **Why three tracks?** NCANDS is restricted-use and requires a formal NDACAN data-use agreement (weeks to months of paperwork). The real-data track uses what's publicly downloadable today; the simulated track lets the case-level methodology be developed in parallel; the NCANDS plan documents the path to the restricted version.
 
 ---
 
@@ -23,6 +26,9 @@ Both tracks are active parts of this repository. The simulated track is the work
 ├── data/
 │   ├── acs_scr_reports.csv         # Simulated intake records (1,000 cases)
 │   ├── acs_features.csv            # Engineered risk features
+│   ├── nyc_acs_real/               # Real NYC ACS pipeline data (public)
+│   │   ├── local_law_132_demographics.csv
+│   │   └── README.md
 │   ├── raw/                        # Restricted NDACAN data (gitignored, not committed)
 │   └── processed/                  # Cleaned/derived files (gitignored)
 ├── notebooks/                      # Simulated-data learning notebooks (R / SQL)
@@ -50,15 +56,45 @@ Both tracks are active parts of this repository. The simulated track is the work
 │   └── run_all.R                   # Orchestrator
 ├── docs/
 │   └── NDACAN_NCANDS_Project_Plan.md   # Research design for the real-data track
-├── results/                        # Pipeline outputs on simulated data
-│   ├── observations.md             # Narrative write-up of findings
-│   ├── run_analysis.py             # Reproducible pipeline (sklearn + SHAP)
+├── results/                        # Pipeline outputs
+│   ├── observations.md             # Findings on SIMULATED data
+│   ├── run_analysis.py             # Reproducible simulated-data pipeline (sklearn + SHAP)
 │   ├── summary.json
-│   ├── figures/                    # PNG charts
-│   └── tables/                     # CSV tables
+│   ├── figures/                    # Simulated-data PNG charts
+│   ├── tables/                     # Simulated-data CSV tables
+│   └── real_data/                  # Findings on REAL NYC ACS data
+│       ├── observations.md
+│       ├── run_real_analysis.py
+│       ├── summary.json
+│       ├── figures/
+│       └── tables/
 └── utils/
     └── simulate_data.py            # Regenerate the synthetic dataset
 ```
+
+---
+
+## Part 0 — Real NYC ACS Data Track
+
+Analysis on **real, publicly published NYC ACS child-welfare pipeline data** — the demographics-at-each-step report ACS files with City Council under Local Law 132 of 2022. Source: [NYC Open Data dataset `uhvm-6sct`](https://data.cityofnewyork.us/Social-Services/Report-to-City-Council-on-Demographics-of-Children/uhvm-6sct).
+
+The full write-up lives in [`results/real_data/observations.md`](results/real_data/observations.md). Headline findings (FY2022 → FY2025, citywide):
+
+| Metric | FY2022 | FY2025 | Δ |
+|---|---:|---:|---:|
+| SCR intakes | 92,305 | 89,316 | −3.2% |
+| Indication rate per intake | **27.6%** | **22.3%** | −5.3 pts |
+| CARES rate per intake | 12.1% | **23.4%** | **+11.3 pts** |
+| Emergency removal per intake | 1.66% | 1.53% | −0.13 pts |
+| Foster-care entry per intake | 2.68% | 2.64% | flat |
+
+**Read.** The headline pattern is a visible **policy shift**: as the indication rate drops 5 points, the CARES (non-investigation) track rate roughly doubles. Cases aren't disappearing — they're being routed out of formal investigation.
+
+**Race disparity finding (pooled FY2022–FY2025).** Black children are 36.7% of intakes but **47.3% of foster-care entries** — a 1.29× over-representation that appears at the foster-care stage, not the indication stage (37.2% — matching their intake share). The disparity grows as cases move further down the pipeline. White children show the highest per-intake emergency-removal rate (3.16%) — a real counter-pattern that aggregate disparity narratives often miss.
+
+**Reproduce:** `python results/real_data/run_real_analysis.py`. Inputs in `data/nyc_acs_real/`; outputs in `results/real_data/`.
+
+This track does what the simulated track can't: produce findings on *real* NYC numbers. What it *can't* do is case-level prediction — the data is aggregate counts by demographic × fiscal year. For the case-level methodology, see Part 1.
 
 ---
 
