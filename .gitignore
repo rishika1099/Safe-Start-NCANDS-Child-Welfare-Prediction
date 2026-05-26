@@ -7,12 +7,6 @@
 __pycache__/
 *.pyc
 
-# Restricted child welfare research data — NEVER commit
-data/raw/*
-data/processed/*
-!data/raw/.gitkeep
-!data/processed/.gitkeep
-
 # Local environment
 .env
 .venv/

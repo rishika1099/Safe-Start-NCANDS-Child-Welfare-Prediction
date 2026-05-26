@@ -20,9 +20,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[1]
 SRC  = ROOT / "data" / "nyc_acs_real" / "local_law_132_demographics.csv"
-OUT  = ROOT / "results" / "real_data"
+OUT  = ROOT / "results"
 TAB  = OUT / "tables"
 FIG  = OUT / "figures"
 for p in (OUT, TAB, FIG): p.mkdir(parents=True, exist_ok=True)

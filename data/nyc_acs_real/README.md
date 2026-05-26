@@ -42,4 +42,4 @@ SCR intake → CARES case → Investigation → Indication → Emergency removal
 
 ## Why this is in the repo
 
-The simulated dataset in `data/acs_*.csv` was modeled on this kind of NYC ACS pipeline. Now that this real dataset is here, results computed on it live in [`results/real_data/`](../../results/real_data/).
+This is the input to Part 2 of the repository (the real-data project). The results computed on it live in [`results/`](../../results/) (see [`results/observations.md`](../../results/observations.md)). The simulated dataset in `data/acs_*.csv` was modeled on this kind of NYC ACS pipeline and is used by the Part 1 learning notebooks.

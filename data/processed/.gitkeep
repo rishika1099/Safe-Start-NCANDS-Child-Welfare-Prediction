@@ -1,3 +1,0 @@
-# This directory holds derived / cleaned files from NDACAN raw data.
-# Its contents are gitignored; only this .gitkeep is tracked.
-# Aggregate outputs must respect NDACAN minimum-cell suppression.
